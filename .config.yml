@@ -1,0 +1,16 @@
+############################################################################################
+##      This is a demo config. Rename the file to config.yaml and add your settings      ##
+############################################################################################
+port: 9000
+domain: localhost
+token: 123456
+logconfig:
+  debug: true
+  file: logs/goboilerplate.log
+
+postgresConfig:
+  host: localhost
+  port: 5432
+  database: goboilerplate
+  user: admin
+  password: admin

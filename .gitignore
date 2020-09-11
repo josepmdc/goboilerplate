@@ -1,0 +1,6 @@
+.idea/
+logs/
+.scannerwork/
+cov.out
+report.json
+sonar-project.properties

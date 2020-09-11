@@ -1,0 +1,16 @@
+port: 8080
+domain: localhost
+token: 123456
+logconfig:
+  debug: true
+  file: logs/goboilerplate.log
+
+postgresConfig:
+  host: localhost
+  port: 5432
+  database: goboilerplate
+  user: josepm
+  password: master
+
+auth:
+  jwt_secret: Pr2B5PAauM=QNH7-a58Qu7D9wJ=Pd?tDAtA*6Xpt
