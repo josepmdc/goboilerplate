@@ -1,4 +1,4 @@
-package logger
+package log
 
 import (
 	"github.com/josepmdc/goboilerplate/conf"

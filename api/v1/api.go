@@ -12,5 +12,6 @@ import (
 func NewRouter(s *app.Services) http.Handler {
 	r := chi.NewRouter()
 	r.Mount("/user", NewUserHandler(s.User).routes())
+	r.Mount("/auth", NewAuthHandler(s.Auth).routes())
 	return r
 }

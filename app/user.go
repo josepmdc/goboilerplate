@@ -13,7 +13,8 @@ import (
 // UserService is an interface that defines the opearations that you can do
 // with the User domain entity
 type UserService interface {
-	FindUser(ID uuid.UUID) (*domain.User, error)
+	FindByID(ID uuid.UUID) (*domain.User, error)
+	FindByUsername(userName string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 	CheckEmail(email string) bool
 	CheckUsername(username string) bool
@@ -34,8 +35,16 @@ func NewUserService(conf *conf.Config) (UserService, error) {
 	}, nil
 }
 
-func (us *userService) FindUser(ID uuid.UUID) (*domain.User, error) {
+func (us *userService) FindByID(ID uuid.UUID) (*domain.User, error) {
 	user, err := us.UserRepo.FindByID(ID)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (us *userService) FindByUsername(userName string) (*domain.User, error) {
+	user, err := us.UserRepo.FindByUsername(userName)
 	if err != nil {
 		return nil, err
 	}

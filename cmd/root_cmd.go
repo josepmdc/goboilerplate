@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/josepmdc/goboilerplate/logger"
+	"github.com/josepmdc/goboilerplate/log"
 
 	"github.com/josepmdc/goboilerplate/api"
 	"github.com/josepmdc/goboilerplate/app"
@@ -33,14 +33,14 @@ func run(cmd *cobra.Command, _ []string) {
 		panic("Failed to load config: " + err.Error())
 	}
 
-	err = logger.ConfigureLogger(&config.LogConfig)
+	err = log.ConfigureLogger(&config.LogConfig)
 	if err != nil {
 		panic("Failed to configure logger: " + err.Error())
 	}
 
 	s, err := app.InitServices(config)
 	if err != nil {
-		logger.Logger.Fatalf("Couldn't initialize services: %s", err.Error())
+		log.Logger.Fatalf("Couldn't initialize services: %s", err.Error())
 	}
 	startServer(config, s)
 }
@@ -55,5 +55,5 @@ func startServer(config *conf.Config, services *app.Services) {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	}
-	logger.Logger.Errorf("Error starting the server: %s", srv.ListenAndServe().Error())
+	log.Logger.Errorf("Error starting the server: %s", srv.ListenAndServe().Error())
 }

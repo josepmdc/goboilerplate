@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/josepmdc/goboilerplate/domain"
-	log "github.com/josepmdc/goboilerplate/logger"
+	"github.com/josepmdc/goboilerplate/log"
 )
 
 type pgUserRepo struct {
@@ -19,6 +19,31 @@ func NewUserRepo(db *sql.DB) domain.UserRepo {
 	return &pgUserRepo{
 		DB: db,
 	}
+}
+
+func (repo *pgUserRepo) FindByUsername(userName string) (*domain.User, error) {
+	var ID uuid.UUID
+	var fullName, email, password string
+	var isAdmin bool
+	var score int
+	var createdAt time.Time
+	err := repo.DB.QueryRow(`SELECT id, email, full_name, admin, created_at, score, password FROM users WHERE username = $1`, userName).
+		Scan(&ID, &email, &fullName, &isAdmin, &createdAt, &score, &password)
+
+	if err != nil {
+		log.Logger.Warnf("Could not get user from database: %s", err.Error())
+		return nil, err
+	}
+
+	user := domain.User{
+		ID:       ID,
+		FullName: fullName,
+		UserName: userName,
+		Email:    email,
+		Score:    score,
+		Password: password,
+	}
+	return &user, nil
 }
 
 // FindByID searches on the database for a user with an ID. If it doesn't find

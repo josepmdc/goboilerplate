@@ -16,6 +16,7 @@ type User struct {
 // UserRepo is the interface that defines all of the operations the User entity
 // can do with the persistance layer
 type UserRepo interface {
+	FindByUsername(userName string) (*User, error)
 	FindByID(id uuid.UUID) (*User, error)
 	FindAll() (*[]User, error)
 	Create(u *User) (*User, error)

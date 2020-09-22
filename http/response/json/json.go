@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/josepmdc/goboilerplate/http/response"
-	"github.com/josepmdc/goboilerplate/logger"
+	"github.com/josepmdc/goboilerplate/log"
 )
 
 const contentTypeHeader = `application/json`
@@ -39,8 +39,6 @@ func NoContent(w http.ResponseWriter, r *http.Request) {
 
 // ServerError sends an internal error to the client.
 func ServerError(w http.ResponseWriter, r *http.Request, err error) {
-	logger.Logger.Warnf("[HTTP:Internal Server Error] %s => %v", r.URL, err)
-
 	builder := response.New(w, r)
 	builder.WithStatus(http.StatusInternalServerError)
 	builder.WithHeader("Content-Type", contentTypeHeader)
@@ -50,8 +48,6 @@ func ServerError(w http.ResponseWriter, r *http.Request, err error) {
 
 // BadRequest sends a bad request error to the client.
 func BadRequest(w http.ResponseWriter, r *http.Request, err error) {
-	logger.Logger.Warnf("[HTTP:Bad Request] %s => %v", r.URL, err)
-
 	builder := response.New(w, r)
 	builder.WithStatus(http.StatusBadRequest)
 	builder.WithHeader("Content-Type", contentTypeHeader)
@@ -61,8 +57,6 @@ func BadRequest(w http.ResponseWriter, r *http.Request, err error) {
 
 // Unauthorized sends a not authorized error to the client.
 func Unauthorized(w http.ResponseWriter, r *http.Request) {
-	logger.Logger.Warnf("[HTTP:Unauthorized] %s", r.URL)
-
 	builder := response.New(w, r)
 	builder.WithStatus(http.StatusUnauthorized)
 	builder.WithHeader("Content-Type", contentTypeHeader)
@@ -72,8 +66,6 @@ func Unauthorized(w http.ResponseWriter, r *http.Request) {
 
 // Forbidden sends a forbidden error to the client.
 func Forbidden(w http.ResponseWriter, r *http.Request) {
-	logger.Logger.Warnf("[HTTP:Forbidden] %s", r.URL)
-
 	builder := response.New(w, r)
 	builder.WithStatus(http.StatusForbidden)
 	builder.WithHeader("Content-Type", contentTypeHeader)
@@ -83,8 +75,6 @@ func Forbidden(w http.ResponseWriter, r *http.Request) {
 
 // NotFound sends a page not found error to the client.
 func NotFound(w http.ResponseWriter, r *http.Request, entity string) {
-	logger.Logger.Warnf("[HTTP:Not Found] %s", r.URL)
-
 	builder := response.New(w, r)
 	builder.WithStatus(http.StatusNotFound)
 	builder.WithHeader("Content-Type", contentTypeHeader)
@@ -103,7 +93,7 @@ func toJSONError(err error) []byte {
 func toJSON(v interface{}) []byte {
 	b, err := json.Marshal(v)
 	if err != nil {
-		logger.Logger.Warnf("[HTTP:JSON] %v", err)
+		log.Logger.Warnf("[HTTP:JSON] %v", err)
 		return []byte("")
 	}
 

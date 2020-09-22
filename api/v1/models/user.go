@@ -16,10 +16,13 @@ type User struct {
 	Email    string    `json:"email"`
 }
 
-type Credentials struct {
-	UserName string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+func DecodeUser(body io.ReadCloser) (*User, error) {
+	var user User
+	err := json.NewDecoder(body).Decode(&user)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid JSON payload: %v", err)
+	}
+	return &user, nil
 }
 
 func MapUserToAPI(user *domain.User) *User {
@@ -46,22 +49,4 @@ func MapUserToDomain(user *User) *domain.User {
 		Score:    user.Score,
 		Email:    user.Email,
 	}
-}
-
-func DecodeUser(body io.ReadCloser) (*User, error) {
-	var user User
-	err := json.NewDecoder(body).Decode(&user)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid JSON payload: %v", err)
-	}
-	return &user, nil
-}
-
-func DecodeCredentials(body io.ReadCloser) (*Credentials, error) {
-	var c Credentials
-	err := json.NewDecoder(body).Decode(&c)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid JSON payload: %v", err)
-	}
-	return &c, nil
 }

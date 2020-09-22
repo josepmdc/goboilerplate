@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/josepmdc/goboilerplate/conf"
-	"github.com/josepmdc/goboilerplate/logger"
+	"github.com/josepmdc/goboilerplate/log"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	err = logger.ConfigureLogger(&cfg.LogConfig)
+	err = log.ConfigureLogger(&cfg.LogConfig)
 	if err != nil {
 		panic(err)
 	}
