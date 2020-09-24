@@ -52,3 +52,18 @@ func ValidateToken(token string) (bool, error) {
 	}
 	return true, nil
 }
+
+// Validate checks that the required values of the user are filled and that they
+// meet specific  requirements
+func (credentials *Credentials) Validate() bool {
+	if credentials.Username == "" {
+		return false
+	}
+	if credentials.Password == "" || len(credentials.Password) < 8 {
+		return false
+	}
+	if credentials.Email == "" {
+		return false
+	}
+	return true
+}

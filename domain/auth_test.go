@@ -3,42 +3,42 @@ package domain
 import "testing"
 
 func TestValidate(t *testing.T) {
-	user := &User{
-		UserName: "ASDF",
+	credentials := &Credentials{
+		Username: "ASDF",
 		Password: "asd&f3$4324fdfsf",
 		Email:    "asdf@gmail.com",
 	}
 
-	if user.Validate() == false {
+	if credentials.Validate() == false {
 		t.Error("Expected the user to be valid but it returned invalid")
 	}
 
-	user = &User{
+	credentials = &Credentials{
 		Password: "asd&f3$4324fdfsf",
 		Email:    "asdf@gmail.com",
 	}
-	if user.Validate() == true {
+	if credentials.Validate() == true {
 		t.Error("Expected the user to be invalid but it returned valid")
 	}
 
-	user = &User{
-		UserName: "ASDF",
+	credentials = &Credentials{
+		Username: "ASDF",
 		Email:    "asdf@gmail.com",
 	}
-	if user.Validate() == true {
+	if credentials.Validate() == true {
 		t.Error("Expected the user to be invalid but it returned valid")
 	}
 
-	user = &User{
-		UserName: "ASDF",
+	credentials = &Credentials{
+		Username: "ASDF",
 		Password: "asdsadf$/&dsad",
 	}
-	if user.Validate() == true {
+	if credentials.Validate() == true {
 		t.Error("Expected the user to be invalid but it returned valid")
 	}
 
-	user = &User{}
-	if user.Validate() == true {
+	credentials = &Credentials{}
+	if credentials.Validate() == true {
 		t.Error("Expected the user to be invalid but it returned valid")
 	}
 }

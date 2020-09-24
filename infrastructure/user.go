@@ -21,13 +21,13 @@ func NewUserRepo(db *sql.DB) domain.UserRepo {
 	}
 }
 
-func (repo *pgUserRepo) FindByUsername(userName string) (*domain.User, error) {
+func (repo *pgUserRepo) FindByUsername(username string) (*domain.User, error) {
 	var ID uuid.UUID
 	var fullName, email, password string
 	var isAdmin bool
 	var score int
 	var createdAt time.Time
-	err := repo.DB.QueryRow(`SELECT id, email, full_name, admin, created_at, score, password FROM users WHERE username = $1`, userName).
+	err := repo.DB.QueryRow(`SELECT id, email, full_name, admin, created_at, score, password FROM users WHERE username = $1`, username).
 		Scan(&ID, &email, &fullName, &isAdmin, &createdAt, &score, &password)
 
 	if err != nil {
@@ -38,7 +38,7 @@ func (repo *pgUserRepo) FindByUsername(userName string) (*domain.User, error) {
 	user := domain.User{
 		ID:       ID,
 		FullName: fullName,
-		UserName: userName,
+		Username: username,
 		Email:    email,
 		Score:    score,
 		Password: password,
@@ -49,12 +49,12 @@ func (repo *pgUserRepo) FindByUsername(userName string) (*domain.User, error) {
 // FindByID searches on the database for a user with an ID. If it doesn't find
 // it returns a nil object
 func (repo *pgUserRepo) FindByID(ID uuid.UUID) (*domain.User, error) {
-	var fullName, userName, email string
+	var fullName, username, email string
 	var isAdmin bool
 	var score int
 	var createdAt time.Time
 	err := repo.DB.QueryRow(`SELECT username, email, full_name, admin, created_at, score FROM users WHERE id = $1`, ID).
-		Scan(&userName, &email, &fullName, &isAdmin, &createdAt, &score)
+		Scan(&username, &email, &fullName, &isAdmin, &createdAt, &score)
 
 	if err != nil {
 		log.Logger.Warnf("Could not get user from database: %s", err.Error())
@@ -64,7 +64,7 @@ func (repo *pgUserRepo) FindByID(ID uuid.UUID) (*domain.User, error) {
 	user := domain.User{
 		ID:       ID,
 		FullName: fullName,
-		UserName: userName,
+		Username: username,
 		Email:    email,
 		Score:    score,
 	}
@@ -79,14 +79,14 @@ func (repo *pgUserRepo) Create(u *domain.User) (*domain.User, error) {
 	var err error
 	u.ID, err = uuid.NewRandom()
 	if err != nil {
-		log.Logger.Warnf("Could not insert user %s into the database: %s", u.UserName, err.Error())
+		log.Logger.Warnf("Could not insert user %s into the database: %s", u.Username, err.Error())
 		return nil, err
 	}
 
 	_, err = repo.DB.Exec(`INSERT INTO users (id, username, password, email, full_name) VALUES ($1, $2, $3, $4, $5)`,
-		u.ID, u.UserName, u.Password, u.Email, u.FullName)
+		u.ID, u.Username, u.Password, u.Email, u.FullName)
 	if err != nil {
-		log.Logger.Warnf("Could not insert user %s into the database: %s", u.UserName, err.Error())
+		log.Logger.Warnf("Could not insert user %s into the database: %s", u.Username, err.Error())
 		return nil, err
 	}
 	return u, nil

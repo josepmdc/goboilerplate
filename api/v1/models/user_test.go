@@ -69,7 +69,7 @@ func TestMapUserToDomain(t *testing.T) {
 func GetDomainUser() *domain.User {
 	return &domain.User{
 		ID:       ID,
-		UserName: USER_NAME,
+		Username: USER_NAME,
 		FullName: FULL_NAME,
 		Score:    SCORE,
 		Email:    EMAIL,
@@ -79,7 +79,7 @@ func GetDomainUser() *domain.User {
 func GetApiUser() *User {
 	return &User{
 		ID:       ID,
-		UserName: USER_NAME,
+		Username: USER_NAME,
 		FullName: FULL_NAME,
 		Score:    SCORE,
 		Email:    EMAIL,

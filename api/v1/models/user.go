@@ -3,14 +3,15 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+
 	"github.com/google/uuid"
 	"github.com/josepmdc/goboilerplate/domain"
-	"io"
 )
 
 type User struct {
 	ID       uuid.UUID `json:"id"`
-	UserName string    `json:"username"`
+	Username string    `json:"username"`
 	FullName string    `json:"full_name"`
 	Score    int       `json:"score"`
 	Email    string    `json:"email"`
@@ -31,7 +32,7 @@ func MapUserToAPI(user *domain.User) *User {
 	}
 	return &User{
 		ID:       user.ID,
-		UserName: user.UserName,
+		Username: user.Username,
 		FullName: user.FullName,
 		Score:    user.Score,
 		Email:    user.Email,
@@ -44,7 +45,7 @@ func MapUserToDomain(user *User) *domain.User {
 	}
 	return &domain.User{
 		ID:       user.ID,
-		UserName: user.UserName,
+		Username: user.Username,
 		FullName: user.FullName,
 		Score:    user.Score,
 		Email:    user.Email,

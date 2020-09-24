@@ -14,8 +14,8 @@ import (
 // with the User domain entity
 type UserService interface {
 	FindByID(ID uuid.UUID) (*domain.User, error)
-	FindByUsername(userName string) (*domain.User, error)
-	CreateUser(user *domain.User) (*domain.User, error)
+	FindByUsername(username string) (*domain.User, error)
+	CreateUser(user *domain.Credentials) (*domain.User, error)
 	CheckEmail(email string) bool
 	CheckUsername(username string) bool
 }
@@ -43,24 +43,29 @@ func (us *userService) FindByID(ID uuid.UUID) (*domain.User, error) {
 	return user, nil
 }
 
-func (us *userService) FindByUsername(userName string) (*domain.User, error) {
-	user, err := us.UserRepo.FindByUsername(userName)
+func (us *userService) FindByUsername(username string) (*domain.User, error) {
+	user, err := us.UserRepo.FindByUsername(username)
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (us *userService) CreateUser(user *domain.User) (*domain.User, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 8)
+func (us *userService) CreateUser(credentials *domain.Credentials) (*domain.User, error) {
+	ok := credentials.Validate()
+	if !ok {
+		return nil, errors.New("Invalid credentials")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
-	user.Password = string(hashedPassword)
 
-	ok := user.Validate()
-	if !ok {
-		return nil, errors.New("Invalid user")
+	user := &domain.User{
+		Email:    credentials.Email,
+		Password: string(hashedPassword),
+		Username: credentials.Username,
 	}
 
 	if _, err = us.UserRepo.Create(user); err != nil {

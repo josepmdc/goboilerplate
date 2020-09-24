@@ -12,17 +12,17 @@ type Services struct {
 func InitServices(cfg *conf.Config) (*Services, error) {
 	services := &Services{}
 
-	if us, err := NewUserService(cfg); err != nil {
+	us, err := NewUserService(cfg)
+	if err != nil {
 		return nil, err
-	} else {
-		services.User = us
 	}
+	services.User = us
 
-	if as, err := NewAuthService(services.User); err != nil {
+	as, err := NewAuthService(services.User)
+	if err != nil {
 		return nil, err
-	} else {
-		services.Auth = as
 	}
+	services.Auth = as
 
 	return services, nil
 }

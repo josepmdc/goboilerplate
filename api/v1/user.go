@@ -54,14 +54,14 @@ func (h *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *userHandler) createUser(w http.ResponseWriter, r *http.Request) {
-	user, err := models.DecodeUser(r.Body)
+	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user: %s", err.Error())
 		json.BadRequest(w, r, err)
 		return
 	}
 
-	_, err = h.service.CreateUser(models.MapUserToDomain(user))
+	_, err = h.service.CreateUser(models.MapCredentialsToDomain(credentials))
 	if err != nil {
 		log.Logger.Warnf("Could not create user: %s", err.Error())
 		json.BadRequest(w, r, err)
