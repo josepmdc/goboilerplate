@@ -36,14 +36,14 @@ func (h *AuthHandler) signIn(w http.ResponseWriter, r *http.Request) {
 	creds, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode credentials: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
 	token, err := h.service.SignIn(models.MapCredentialsToDomain(creds))
 	if err != nil {
 		log.Logger.Warnf("Could not sign in: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 

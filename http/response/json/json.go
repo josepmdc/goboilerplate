@@ -2,100 +2,66 @@ package json
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
-
-	"github.com/josepmdc/goboilerplate/http/response"
-	"github.com/josepmdc/goboilerplate/log"
 )
 
 const contentTypeHeader = `application/json`
 
+type errorMsg struct {
+	ErrorMessage string `json:"error_message"`
+}
+
 // OK creates a new JSON response with a 200 status code.
-func OK(w http.ResponseWriter, r *http.Request, body interface{}) {
-	builder := response.New(w, r)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSON(body))
-	builder.Write()
+func OK(w http.ResponseWriter, body interface{}) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(body)
 }
 
 // Created sends a created response to the client.
-func Created(w http.ResponseWriter, r *http.Request, body interface{}) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusCreated)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSON(body))
-	builder.Write()
+func Created(w http.ResponseWriter, body interface{}) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(body)
 }
 
 // NoContent sends a no content response to the client.
-func NoContent(w http.ResponseWriter, r *http.Request) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusNoContent)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.Write()
+func NoContent(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // ServerError sends an internal error to the client.
-func ServerError(w http.ResponseWriter, r *http.Request, err error) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusInternalServerError)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSONError(err))
-	builder.Write()
+func ServerError(w http.ResponseWriter, err error) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(w).Encode(errorMsg{ErrorMessage: err.Error()})
 }
 
 // BadRequest sends a bad request error to the client.
-func BadRequest(w http.ResponseWriter, r *http.Request, err error) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusBadRequest)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSONError(err))
-	builder.Write()
+func BadRequest(w http.ResponseWriter, err error) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusBadRequest)
+	json.NewEncoder(w).Encode(errorMsg{ErrorMessage: err.Error()})
 }
 
 // Unauthorized sends a not authorized error to the client.
-func Unauthorized(w http.ResponseWriter, r *http.Request) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusUnauthorized)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSONError(errors.New("Access Unauthorized")))
-	builder.Write()
+func Unauthorized(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(errorMsg{ErrorMessage: "Access Unauthorized"})
 }
 
 // Forbidden sends a forbidden error to the client.
-func Forbidden(w http.ResponseWriter, r *http.Request) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusForbidden)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSONError(errors.New("Access Forbidden")))
-	builder.Write()
+func Forbidden(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusForbidden)
+	json.NewEncoder(w).Encode(errorMsg{ErrorMessage: "Access Forbidden"})
 }
 
 // NotFound sends a page not found error to the client.
-func NotFound(w http.ResponseWriter, r *http.Request, entity string) {
-	builder := response.New(w, r)
-	builder.WithStatus(http.StatusNotFound)
-	builder.WithHeader("Content-Type", contentTypeHeader)
-	builder.WithBody(toJSONError(fmt.Errorf("%s Not Found", entity)))
-	builder.Write()
-}
-
-func toJSONError(err error) []byte {
-	type errorMsg struct {
-		ErrorMessage string `json:"error_message"`
-	}
-
-	return toJSON(errorMsg{ErrorMessage: err.Error()})
-}
-
-func toJSON(v interface{}) []byte {
-	b, err := json.Marshal(v)
-	if err != nil {
-		log.Logger.Warnf("[HTTP:JSON] %v", err)
-		return []byte("")
-	}
-
-	return b
+func NotFound(w http.ResponseWriter, entity string) {
+	w.Header().Set("Content-Type", contentTypeHeader)
+	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(errorMsg{ErrorMessage: entity + " Not Found"})
 }

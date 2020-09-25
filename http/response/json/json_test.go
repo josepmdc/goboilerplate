@@ -22,7 +22,7 @@ func TestOKResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		OK(w, r, map[string]string{"key": "value"})
+		OK(w, map[string]string{"key": "value"})
 	})
 
 	handler.ServeHTTP(w, r)
@@ -35,7 +35,7 @@ func TestOKResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"key":"value"}`
+	expectedBody := "{\"key\":\"value\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %q instead of %q`, actualBody, expectedBody)
@@ -57,7 +57,7 @@ func TestCreatedResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		Created(w, r, map[string]string{"key": "value"})
+		Created(w, map[string]string{"key": "value"})
 	})
 
 	handler.ServeHTTP(w, r)
@@ -68,7 +68,7 @@ func TestCreatedResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"key":"value"}`
+	expectedBody := "{\"key\":\"value\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -90,7 +90,7 @@ func TestNoContentResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		NoContent(w, r)
+		NoContent(w)
 	})
 
 	handler.ServeHTTP(w, r)
@@ -123,7 +123,7 @@ func TestServerErrorResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ServerError(w, r, errors.New("some error"))
+		ServerError(w, errors.New("some error"))
 	})
 
 	handler.ServeHTTP(w, r)
@@ -136,7 +136,7 @@ func TestServerErrorResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"error_message":"some error"}`
+	expectedBody := "{\"error_message\":\"some error\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %q instead of %q`, actualBody, expectedBody)
@@ -158,7 +158,7 @@ func TestBadRequestResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		BadRequest(w, r, errors.New("Some Error"))
+		BadRequest(w, errors.New("Some Error"))
 	})
 
 	handler.ServeHTTP(w, r)
@@ -169,7 +169,7 @@ func TestBadRequestResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"error_message":"Some Error"}`
+	expectedBody := "{\"error_message\":\"Some Error\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -191,7 +191,7 @@ func TestUnauthorizedResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		Unauthorized(w, r)
+		Unauthorized(w)
 	})
 
 	handler.ServeHTTP(w, r)
@@ -202,7 +202,7 @@ func TestUnauthorizedResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"error_message":"Access Unauthorized"}`
+	expectedBody := "{\"error_message\":\"Access Unauthorized\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -224,7 +224,7 @@ func TestForbiddenResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		Forbidden(w, r)
+		Forbidden(w)
 	})
 
 	handler.ServeHTTP(w, r)
@@ -235,7 +235,7 @@ func TestForbiddenResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"error_message":"Access Forbidden"}`
+	expectedBody := "{\"error_message\":\"Access Forbidden\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -259,7 +259,7 @@ func TestNotFoundResponse(t *testing.T) {
 	entity := "User"
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		NotFound(w, r, entity)
+		NotFound(w, entity)
 	})
 
 	handler.ServeHTTP(w, r)
@@ -270,7 +270,7 @@ func TestNotFoundResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := `{"error_message":"` + entity + ` Not Found"}`
+	expectedBody := "{\"error_message\":\"" + entity + " Not Found\"}\n"
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -292,7 +292,7 @@ func TestBuildInvalidJSONResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		OK(w, r, make(chan int))
+		OK(w, make(chan int))
 	})
 
 	handler.ServeHTTP(w, r)

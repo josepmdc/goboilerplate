@@ -43,67 +43,67 @@ func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
 	ID, err := uuid.Parse(chi.URLParam(r, userID))
 	if err != nil {
 		log.Logger.Warnf("[HTTP:Bad Request] %s => %v", r.URL, err)
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
 	user, err := h.service.FindByID(ID)
 	if err != nil {
-		json.NotFound(w, r, "User")
+		json.NotFound(w, "User")
 		return
 	}
 
-	json.OK(w, r, models.MapUserToAPI(user))
+	json.OK(w, models.MapUserToAPI(user))
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
 	_, err = h.service.CreateUser(models.MapCredentialsToDomain(credentials))
 	if err != nil {
 		log.Logger.Warnf("Could not create user: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
-	json.OK(w, r, "User created successfully")
+	json.OK(w, "User created successfully")
 }
 
 func (h *UserHandler) checkEmail(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user credentials: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
 	exists := h.service.CheckEmail(credentials.Email)
 	if exists {
-		json.BadRequest(w, r, errors.New("Email is already taken"))
+		json.BadRequest(w, errors.New("Email is already taken"))
 		return
 	}
 
-	json.OK(w, r, "Email is free")
+	json.OK(w, "Email is free")
 }
 
 func (h *UserHandler) checkUsername(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user credentials: %s", err.Error())
-		json.BadRequest(w, r, err)
+		json.BadRequest(w, err)
 		return
 	}
 
 	exists := h.service.CheckUsername(credentials.Username)
 	if exists {
-		json.BadRequest(w, r, errors.New("Username is already taken"))
+		json.BadRequest(w, errors.New("Username is already taken"))
 		return
 	}
 
-	json.OK(w, r, "Username is free")
+	json.OK(w, "Username is free")
 }
