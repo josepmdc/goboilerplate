@@ -11,18 +11,20 @@ import (
 	"github.com/josepmdc/goboilerplate/log"
 )
 
-type authHandler struct {
+// AuthHandler is a struct that contains all the functions for handling requests
+// to the authentication endpoints
+type AuthHandler struct {
 	service app.AuthService
 }
 
 // NewAuthHandler creates a handler for the authentication endpoints
-func NewAuthHandler(s app.AuthService) *authHandler {
-	return &authHandler{
+func NewAuthHandler(s app.AuthService) *AuthHandler {
+	return &AuthHandler{
 		service: s,
 	}
 }
 
-func (h *authHandler) routes() http.Handler {
+func (h *AuthHandler) routes() http.Handler {
 	r := chi.NewRouter()
 
 	r.Post("/signin", h.signIn)
@@ -30,7 +32,7 @@ func (h *authHandler) routes() http.Handler {
 	return r
 }
 
-func (h *authHandler) signIn(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) signIn(w http.ResponseWriter, r *http.Request) {
 	creds, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode credentials: %s", err.Error())

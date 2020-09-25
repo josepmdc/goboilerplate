@@ -71,10 +71,6 @@ func (repo *pgUserRepo) FindByID(ID uuid.UUID) (*domain.User, error) {
 	return &user, nil
 }
 
-func (repo *pgUserRepo) FindAll() (*[]domain.User, error) {
-	panic("not implemented") // TODO: Implement
-}
-
 func (repo *pgUserRepo) Create(u *domain.User) (*domain.User, error) {
 	var err error
 	u.ID, err = uuid.NewRandom()

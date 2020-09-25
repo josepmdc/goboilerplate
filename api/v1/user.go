@@ -12,23 +12,26 @@ import (
 	"github.com/josepmdc/goboilerplate/log"
 )
 
-const USER_ID = "userID"
+const userID = "userID"
 
-type userHandler struct {
+// UserHandler is a struct that contains all the functions for handling requests
+// to the user endpoints
+type UserHandler struct {
 	service app.UserService
 }
 
-// NewUserHandler creates a handler for the user endpoints
-func NewUserHandler(s app.UserService) *userHandler {
-	return &userHandler{
+// NewUserHandler creates a handler for the user endpoints and sets the necessary
+// values for it to operate
+func NewUserHandler(s app.UserService) *UserHandler {
+	return &UserHandler{
 		service: s,
 	}
 }
 
-func (h *userHandler) routes() http.Handler {
+func (h *UserHandler) routes() http.Handler {
 	r := chi.NewRouter()
 
-	r.Get("/{"+USER_ID+"}", h.getUser)
+	r.Get("/{"+userID+"}", h.getUser)
 	r.Post("/new", h.createUser)
 	r.Post("/check_email", h.checkEmail)
 	r.Post("/check_username", h.checkUsername)
@@ -36,8 +39,8 @@ func (h *userHandler) routes() http.Handler {
 	return r
 }
 
-func (h *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
-	ID, err := uuid.Parse(chi.URLParam(r, USER_ID))
+func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
+	ID, err := uuid.Parse(chi.URLParam(r, userID))
 	if err != nil {
 		log.Logger.Warnf("[HTTP:Bad Request] %s => %v", r.URL, err)
 		json.BadRequest(w, r, err)
@@ -53,7 +56,7 @@ func (h *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
 	json.OK(w, r, models.MapUserToAPI(user))
 }
 
-func (h *userHandler) createUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user: %s", err.Error())
@@ -71,7 +74,7 @@ func (h *userHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	json.OK(w, r, "User created successfully")
 }
 
-func (h *userHandler) checkEmail(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) checkEmail(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user credentials: %s", err.Error())
@@ -88,7 +91,7 @@ func (h *userHandler) checkEmail(w http.ResponseWriter, r *http.Request) {
 	json.OK(w, r, "Email is free")
 }
 
-func (h *userHandler) checkUsername(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) checkUsername(w http.ResponseWriter, r *http.Request) {
 	credentials, err := models.DecodeCredentials(r.Body)
 	if err != nil {
 		log.Logger.Warnf("Could not decode user credentials: %s", err.Error())

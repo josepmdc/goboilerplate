@@ -15,6 +15,7 @@ type Config struct {
 	PostgresConfig PostgresConfig `yaml:"db"`
 }
 
+// LogConfig defines the configuration for the Logger
 type LogConfig struct {
 	File  string `yaml:"file"`
 	Debug bool   `yaml:"debug"`

@@ -22,6 +22,7 @@ type StandardLogger interface {
 	Debug(args ...interface{})
 }
 
+// Logger is the logger initialized when the application starts.
 var Logger StandardLogger
 
 // ConfigureLogger creates a new implementation of the Logger interface

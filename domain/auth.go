@@ -8,22 +8,26 @@ import (
 
 var jwtKey = []byte("my_secret_key") // TODO Add secret key in config
 
+// Credentials defines the necessary parameters for a user to
+// sign in and sign up
 type Credentials struct {
 	Username string
 	Password string
 	Email    string
 }
 
+// Claims defines the values we will add to the JWT claims
 type Claims struct {
 	Username string
 	jwt.StandardClaims
 }
 
-func GetToken(credentials *Credentials) (string, error) {
+// GetToken returns a JWT token with the username as a claim
+func GetToken(username string) (string, error) {
 	expirationTime := time.Now().Add(5 * time.Minute) // TODO Set the time in config
 
 	claims := &Claims{
-		Username: credentials.Username,
+		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -38,6 +42,7 @@ func GetToken(credentials *Credentials) (string, error) {
 	return tokenString, nil
 }
 
+// ValidateToken validates if a JWT is correct
 func ValidateToken(token string) (bool, error) {
 	claims := &Claims{}
 
@@ -53,7 +58,7 @@ func ValidateToken(token string) (bool, error) {
 	return true, nil
 }
 
-// Validate checks that the required values of the user are filled and that they
+// Validate checks that the required values of the credentials are filled and that they
 // meet specific  requirements
 func (credentials *Credentials) Validate() bool {
 	if credentials.Username == "" {

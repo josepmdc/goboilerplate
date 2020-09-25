@@ -6,6 +6,7 @@ import (
 
 	"github.com/josepmdc/goboilerplate/conf"
 
+	// Blank import to use the Postgres SQL driver
 	_ "github.com/lib/pq"
 )
 

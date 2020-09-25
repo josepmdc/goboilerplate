@@ -12,7 +12,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-// NewRouter creates an http router fot the server
+// NewRouter creates an http router fot the server and mounts the API router
 func NewRouter(services *app.Services) http.Handler {
 	router := chi.NewRouter()
 	// Set up our middleware with sane defaults

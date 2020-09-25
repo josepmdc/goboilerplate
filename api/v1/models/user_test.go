@@ -10,15 +10,15 @@ import (
 var ID = uuid.Must(uuid.NewRandom())
 
 const (
-	USER_NAME = "asdf"
-	FULL_NAME = "asd asdf asdf"
-	SCORE     = 24
-	EMAIL     = "asdf@gmail.com"
+	userName = "asdf"
+	fullName = "asd asdf asdf"
+	score    = 24
+	email    = "asdf@gmail.com"
 )
 
 func TestMapUserToAPI(t *testing.T) {
-	result := MapUserToAPI(GetDomainUser())
-	expected := GetApiUser()
+	result := MapUserToAPI(getDomainUser())
+	expected := getAPIUser()
 
 	if result == nil {
 		t.Error("Mapped user is nil")
@@ -42,8 +42,8 @@ func TestMapUserToAPI(t *testing.T) {
 }
 
 func TestMapUserToDomain(t *testing.T) {
-	result := MapUserToDomain(GetApiUser())
-	expected := GetDomainUser()
+	result := MapUserToDomain(getAPIUser())
+	expected := getDomainUser()
 
 	if result == nil {
 		t.Error("Mapped user is nil")
@@ -66,22 +66,22 @@ func TestMapUserToDomain(t *testing.T) {
 	}
 }
 
-func GetDomainUser() *domain.User {
+func getDomainUser() *domain.User {
 	return &domain.User{
 		ID:       ID,
-		Username: USER_NAME,
-		FullName: FULL_NAME,
-		Score:    SCORE,
-		Email:    EMAIL,
+		Username: userName,
+		FullName: fullName,
+		Score:    score,
+		Email:    email,
 	}
 }
 
-func GetApiUser() *User {
+func getAPIUser() *User {
 	return &User{
 		ID:       ID,
-		Username: USER_NAME,
-		FullName: FULL_NAME,
-		Score:    SCORE,
-		Email:    EMAIL,
+		Username: userName,
+		FullName: fullName,
+		Score:    score,
+		Email:    email,
 	}
 }

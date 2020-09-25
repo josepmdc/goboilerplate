@@ -34,7 +34,7 @@ func (as *authService) SignIn(credentials *domain.Credentials) (string, error) {
 		return "", err
 	}
 
-	token, err := domain.GetToken(credentials)
+	token, err := domain.GetToken(credentials.Username)
 	if err != nil {
 		return "", err
 	}

@@ -18,7 +18,6 @@ type User struct {
 type UserRepo interface {
 	FindByUsername(username string) (*User, error)
 	FindByID(id uuid.UUID) (*User, error)
-	FindAll() (*[]User, error)
 	Create(u *User) (*User, error)
 	CheckEmail(email string) bool
 	CheckUsername(username string) bool

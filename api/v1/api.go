@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// NewRouter creates an http router for the API
+// NewRouter creates an http router for the API and mounts its routes
 func NewRouter(s *app.Services) http.Handler {
 	r := chi.NewRouter()
 	r.Mount("/user", NewUserHandler(s.User).routes())
