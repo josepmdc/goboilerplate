@@ -33,7 +33,7 @@ func LoadConfig(cmd *cobra.Command) (*Config, error) {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.SetConfigName("config")
-		viper.AddConfigPath("./")
+		viper.AddConfigPath("$GOPATH/src/github.com/josepmdc/goboilerplate")
 	}
 
 	if err := viper.ReadInConfig(); err != nil {

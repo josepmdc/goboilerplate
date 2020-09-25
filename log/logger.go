@@ -3,6 +3,7 @@ package log
 import (
 	"github.com/josepmdc/goboilerplate/conf"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 )
 
 // StandardLogger represents a common interface for logging. It has the
@@ -39,4 +40,9 @@ func ConfigureLogger(cfg *conf.LogConfig) error {
 	}
 	Logger = logger.Sugar()
 	return nil
+}
+
+func ConfigureMockLogger() {
+	core, _ := observer.New(zap.InfoLevel)
+	Logger = zap.New(core).Sugar()
 }

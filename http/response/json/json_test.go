@@ -6,20 +6,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/josepmdc/goboilerplate/conf"
 	"github.com/josepmdc/goboilerplate/log"
-	"github.com/spf13/cobra"
 )
 
 func init() {
-	cfg, err := conf.LoadConfig(&cobra.Command{})
-	if err != nil {
-		panic(err)
-	}
-	err = log.ConfigureLogger(&cfg.LogConfig)
-	if err != nil {
-		panic(err)
-	}
+	log.ConfigureMockLogger()
 }
 
 func TestOKResponse(t *testing.T) {
