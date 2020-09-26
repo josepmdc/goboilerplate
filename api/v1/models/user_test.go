@@ -17,57 +17,51 @@ const (
 )
 
 func TestMapUserToAPI(t *testing.T) {
-	result := MapUserToAPI(getDomainUser())
+	u := getDomainUser()
+	result := MapUserToAPI(&u)
 	expected := getAPIUser()
 
-	if result == nil {
-		t.Error("Mapped user is nil")
-	}
-
-	if *result != *expected {
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 
 	result = MapUserToAPI(nil)
-	expected = &User{}
-	if *result != *expected {
+	expected = User{}
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 
 	result = MapUserToAPI(&domain.User{})
-	expected = &User{}
-	if *result != *expected {
+	expected = User{}
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 }
 
 func TestMapUserToDomain(t *testing.T) {
-	result := MapUserToDomain(getAPIUser())
+	u := getAPIUser()
+	result := MapUserToDomain(&u)
 	expected := getDomainUser()
 
-	if result == nil {
-		t.Error("Mapped user is nil")
-	}
-
-	if *result != *expected {
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 
 	result = MapUserToDomain(nil)
-	expected = &domain.User{}
-	if *result != *expected {
+	expected = domain.User{}
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 
 	result = MapUserToDomain(&User{})
-	expected = &domain.User{}
-	if *result != *expected {
+	expected = domain.User{}
+	if *result != expected {
 		t.Errorf("Mapped user is different than expected:\n result: %+v \n expected: %+v", result, expected)
 	}
 }
 
-func getDomainUser() *domain.User {
-	return &domain.User{
+func getDomainUser() domain.User {
+	return domain.User{
 		ID:       ID,
 		Username: userName,
 		FullName: fullName,
@@ -76,8 +70,8 @@ func getDomainUser() *domain.User {
 	}
 }
 
-func getAPIUser() *User {
-	return &User{
+func getAPIUser() User {
+	return User{
 		ID:       ID,
 		Username: userName,
 		FullName: fullName,

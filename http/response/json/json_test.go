@@ -2,6 +2,7 @@ package json
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -35,7 +36,7 @@ func TestOKResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"key\":\"value\"}\n"
+	expectedBody := `{"key":"value"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %q instead of %q`, actualBody, expectedBody)
@@ -68,7 +69,7 @@ func TestCreatedResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"key\":\"value\"}\n"
+	expectedBody := `{"key":"value"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -136,7 +137,7 @@ func TestServerErrorResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"error_message\":\"some error\"}\n"
+	expectedBody := `{"error_message":"some error"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %q instead of %q`, actualBody, expectedBody)
@@ -169,7 +170,7 @@ func TestBadRequestResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"error_message\":\"Some Error\"}\n"
+	expectedBody := `{"error_message":"Some Error"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -202,7 +203,7 @@ func TestUnauthorizedResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"error_message\":\"Access Unauthorized\"}\n"
+	expectedBody := `{"error_message":"Access Unauthorized"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -235,7 +236,7 @@ func TestForbiddenResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"error_message\":\"Access Forbidden\"}\n"
+	expectedBody := `{"error_message":"Access Forbidden"}`
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -270,7 +271,7 @@ func TestNotFoundResponse(t *testing.T) {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
 
-	expectedBody := "{\"error_message\":\"" + entity + " Not Found\"}\n"
+	expectedBody := fmt.Sprintf(`{"error_message":"%s Not Found"}`, entity)
 	actualBody := w.Body.String()
 	if actualBody != expectedBody {
 		t.Fatalf(`Unexpected body, got %s instead of %s`, actualBody, expectedBody)
@@ -298,7 +299,7 @@ func TestBuildInvalidJSONResponse(t *testing.T) {
 	handler.ServeHTTP(w, r)
 	resp := w.Result()
 
-	expectedStatusCode := http.StatusOK
+	expectedStatusCode := http.StatusInternalServerError
 	if resp.StatusCode != expectedStatusCode {
 		t.Fatalf(`Unexpected status code, got %d instead of %d`, resp.StatusCode, expectedStatusCode)
 	}
