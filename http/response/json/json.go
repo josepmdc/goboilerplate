@@ -24,7 +24,10 @@ func writeResponse(w http.ResponseWriter, statusCode int, body interface{}) {
 	}
 
 	w.WriteHeader(statusCode)
-	w.Write(response)
+	_, err = w.Write(response)
+	if err != nil {
+		log.Logger.Warnf("Could not write response -> %s", err.Error())
+	}
 }
 
 // OK creates a new JSON response with a 200 status code.
